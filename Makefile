@@ -125,6 +125,7 @@ go-build: $(BUILD_DIRS)
 	        ARCH=$(ARCH)                                        \
 	        OS=$(OS)                                            \
 	        VERSION=$(VERSION)                                  \
+	        BUILD_ENV="production"                              \
 	        ./build/build.sh                                    \
 	    "
 
