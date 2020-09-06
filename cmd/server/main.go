@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"os"
-	app "vistisen-backend/pkg/server"
+	"vistisen-backend/pkg"
 )
 
 func main() {
@@ -20,9 +20,12 @@ func run() error {
 
 	if port == "" {
 		port = "5000"
+		gin.SetMode(gin.ReleaseMode)
 	}
-	r := mux.NewRouter()
-	server := app.NewServer(r)
+
+	r := gin.Default()
+
+	server := pkg.NewServer(r)
 
 	err := server.Run(":" + port)
 
