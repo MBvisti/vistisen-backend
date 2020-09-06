@@ -5,7 +5,8 @@ PKG_LIST := $(shell go list ${PKG}/...)
 # This version-strategy uses a manual value to set the version string
 VERSION := 0.0.2
 BUILD_ENV := "production"
-APP_NAME := vistisen-staging
+APP_NAME_STAGING := vistisen-staging
+APP_NAME_PRODUCTION := vistisen-production
 
 # Where to push the docker image.
 REGISTRY ?= mbvofdocker
@@ -58,11 +59,17 @@ push-docker-hub:
 container: vet format test
 	@docker build --build-arg VERSION=${VERSION} -t ${REGISTRY}/${OUT}:${VERSION} .
 
-push-heroku: container
-	@docker tag ${REGISTRY}/${OUT}:${VERSION} registry.heroku.com/${APP_NAME}/web
-	@docker push registry.heroku.com/${APP_NAME}/web
-	heroku container:release web -a ${APP_NAME}
-	docker rmi registry.heroku.com/${APP_NAME}/web
+push-heroku-stag: container bin-clean
+	@docker tag ${REGISTRY}/${OUT}:${VERSION} registry.heroku.com/${APP_NAME_STAGING}/web
+	@docker push registry.heroku.com/${APP_NAME_STAGING}/web
+	heroku container:release web -a ${APP_NAME_STAGING}
+	docker rmi registry.heroku.com/${APP_NAME_STAGING}/web
+
+push-heroku-prod: bin-clean
+	@docker tag ${REGISTRY}/${OUT}:${VERSION} registry.heroku.com/${APP_NAME_PRODUCTION}/web
+	@docker push registry.heroku.com/${APP_NAME_PRODUCTION}/web
+	heroku container:release web -a ${APP_NAME_PRODUCTION}
+	docker rmi registry.heroku.com/${APP_NAME_PRODUCTION}/web
 
 $(BUILD_DIRS):
 	@mkdir -p $@
