@@ -30,8 +30,8 @@ format:
 
 # Work around for connecting to DB on host when running the app in docker
 dev: vet format
-	@docker build --build-arg VERSION=${VERSION} --build-arg BUILD_ENV=development --build-arg JWT_ACCESS_SECRET="longstringhere" --build-arg JWT_REFRESH_SECRET="longstringhere" -t ${REGISTRY}/${OUT}:${VERSION} .
-	@docker run --rm -p 5000:5000 --env-file ./.env ${REGISTRY}/${OUT}:${VERSION}
+	@docker build --build-arg VERSION=${VERSION} -t ${REGISTRY}/${OUT}:${VERSION} .
+	@docker run --rm -p 5000:5000 ${REGISTRY}/${OUT}:${VERSION}
 
 test: vet $(BUILD_DIRS)
 	@docker run                                                 	\
@@ -56,8 +56,7 @@ push-docker-hub:
 
 # Makes a build for production
 container: vet format test
-	@docker build --build-arg VERSION=${VERSION} --build-arg BUILD_ENV=${BUILD_ENV} -t ${REGISTRY}/${OUT}:${VERSION} .
-	@docker images prune -f
+	@docker build --build-arg VERSION=${VERSION} -t ${REGISTRY}/${OUT}:${VERSION} .
 
 push-heroku: container
 	@docker tag ${REGISTRY}/${OUT}:${VERSION} registry.heroku.com/${APP_NAME}/web
