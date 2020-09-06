@@ -5,7 +5,7 @@ PKG_LIST := $(shell go list ${PKG}/...)
 # This version-strategy uses a manual value to set the version string
 VERSION := 0.0.2
 BUILD_ENV := "production"
-APP_NAME := test-go-w-docker-three
+APP_NAME := vistisen-staging
 
 # Where to push the docker image.
 REGISTRY ?= mbvofdocker
