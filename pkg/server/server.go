@@ -5,15 +5,15 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	)
+)
 
 type Server struct {
-	router  *mux.Router
+	router *mux.Router
 }
 
 func NewServer(r *mux.Router) *Server {
 	return &Server{
-		router:  r,
+		router: r,
 	}
 }
 
