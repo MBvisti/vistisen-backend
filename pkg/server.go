@@ -2,17 +2,20 @@ package pkg
 
 import (
 	"github.com/gin-gonic/gin"
+	"gopkg.in/gomail.v2"
 	"log"
 	"net/http"
 )
 
 type Server struct {
 	Router *gin.Engine
+	Mailer *gomail.Dialer
 }
 
-func NewServer(r *gin.Engine) *Server {
+func NewServer(r *gin.Engine, m *gomail.Dialer) *Server {
 	return &Server{
 		Router: r,
+		Mailer: m,
 	}
 }
 
@@ -41,5 +44,23 @@ func (s *Server) ApiStatus() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, response)
+	}
+}
+
+func (s *Server) TestMail() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		mail := gomail.NewMessage()
+		mail.SetAddressHeader("From", "hello@mbvistisen.dk", "Vis-ti-sen")
+		mail.SetHeader("To", "vistisen@live.dk")
+		mail.SetHeader("Subject", "Hej fra server")
+
+		err := s.Mailer.DialAndSend(mail)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"status":err})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"status": "great success"})
 	}
 }
