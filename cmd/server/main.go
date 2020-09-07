@@ -21,17 +21,18 @@ func run() error {
 	gmailAcc := os.Getenv("GMAIL_ACCOUNT")
 	gmailPass := os.Getenv("GMAIL_PASSWORD")
 	mailHost := os.Getenv("HOST")
+	gin.SetMode(gin.ReleaseMode)
 
 	if port == "" {
 		port = "5000"
-		gin.SetMode(gin.ReleaseMode)
+		gin.SetMode(gin.DebugMode)
 	}
 
 	r := gin.Default()
 
-	m := gomail.NewDialer(mailHost, 465, gmailAcc, gmailPass)
+	m := gomail.NewDialer(mailHost, 587, gmailAcc, gmailPass)
 
-	server := pkg.NewServer(r, m)
+	server := app.NewServer(r, m)
 
 	err := server.Run(":" + port)
 
