@@ -20,10 +20,10 @@ func (s *Server) ApiStatus() gin.HandlerFunc {
 }
 
 type ContactMail struct {
-	Name string `json:"name"`
-	Mail string `json:"mail"`
+	Name    string `json:"name"`
+	Mail    string `json:"mail"`
 	Subject string `json:"subject"`
-	Msg string `json:"message"`
+	Msg     string `json:"message"`
 }
 
 func (s *Server) Contact() gin.HandlerFunc {
@@ -32,10 +32,10 @@ func (s *Server) Contact() gin.HandlerFunc {
 
 		var cM ContactMail
 
-		err := c.ShouldBindJSON(cM)
+		err := c.ShouldBindJSON(&cM)
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"status": err})
+			c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
 			return
 		}
 
