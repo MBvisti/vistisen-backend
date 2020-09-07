@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"gopkg.in/gomail.v2"
+	"github.com/sendgrid/sendgrid-go"
 	"os"
 	"vistisen-backend/pkg"
 )
@@ -19,9 +19,7 @@ func main() {
 func run() error {
 	// setup dependencies
 	port := os.Getenv("PORT")
-	gmailAcc := os.Getenv("GMAIL_ACCOUNT")
-	gmailPass := os.Getenv("GMAIL_PASSWORD")
-	mailHost := os.Getenv("HOST")
+	sendgridAPI := os.Getenv("SEND_GRID_API_KEY")
 	gin.SetMode(gin.ReleaseMode)
 
 	if port == "" {
@@ -32,9 +30,9 @@ func run() error {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	m := gomail.NewDialer(mailHost, 587, gmailAcc, gmailPass)
+	mailClient := sendgrid.NewSendClient(sendgridAPI)
 
-	server := app.NewServer(r, m)
+	server := app.NewServer(r, mailClient)
 
 	err := server.Run(":" + port)
 

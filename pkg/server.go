@@ -2,17 +2,17 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"gopkg.in/gomail.v2"
+	"github.com/sendgrid/sendgrid-go"
 	"log"
 	"net/http"
 )
 
 type Server struct {
 	Router *gin.Engine
-	Mailer *gomail.Dialer
+	Mailer *sendgrid.Client
 }
 
-func NewServer(r *gin.Engine, m *gomail.Dialer) *Server {
+func NewServer(r *gin.Engine, m *sendgrid.Client) *Server {
 	return &Server{
 		Router: r,
 		Mailer: m,

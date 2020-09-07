@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"gopkg.in/gomail.v2"
+	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"net/http"
 )
 
@@ -30,28 +30,28 @@ func (s *Server) Contact() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 
-		var cM ContactMail
+		var contactMail ContactMail
 
-		err := c.ShouldBindJSON(&cM)
+		err := c.ShouldBindJSON(&contactMail)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
 			return
 		}
 
-		mail := gomail.NewMessage()
-		mail.SetAddressHeader("From", cM.Mail, cM.Name)
-		mail.SetHeader("To", "vistisen@live.dk")
-		mail.SetHeader("Subject", cM.Subject)
-		mail.SetBody("text/html", cM.Msg)
+		from := mail.NewEmail(contactMail.Name, contactMail.Mail)
+		subject := contactMail.Subject
+		to := mail.NewEmail("vis-ti-sen", "vistisen@live.dk")
+		body := contactMail.Msg
 
-		err = s.Mailer.DialAndSend(mail)
+		m := mail.NewSingleEmail(from, subject, to, body, "")
+		response, err := s.Mailer.Send(m)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"status": err})
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"status": "success"})
+		c.JSON(http.StatusOK, gin.H{"status": response})
 	}
 }
