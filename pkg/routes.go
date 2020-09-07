@@ -8,7 +8,7 @@ func (s *Server) routes() *gin.Engine {
 	v1 := r.Group("/v1/api")
 	{
 		v1.GET("/status", s.ApiStatus())
-		v1.POST("/mail", s.TestMail())
+		v1.POST("/contact", s.Contact())
 	}
 
 	return r

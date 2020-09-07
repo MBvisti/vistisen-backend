@@ -26,7 +26,7 @@ type ContactMail struct {
 	Msg string `json:"message"`
 }
 
-func (s *Server) TestMail() gin.HandlerFunc {
+func (s *Server) Contact() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 
