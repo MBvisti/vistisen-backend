@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/gomail.v2"
 	"os"
@@ -29,6 +30,7 @@ func run() error {
 	}
 
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	m := gomail.NewDialer(mailHost, 587, gmailAcc, gmailPass)
 
