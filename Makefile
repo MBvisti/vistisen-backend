@@ -3,7 +3,7 @@ PKG := vistisen-backend/pkg
 PKG_LIST := $(shell go list ${PKG}/...)
 
 # This version-strategy uses a manual value to set the version string
-VERSION := 0.0.2
+VERSION := 0.1.0
 BUILD_ENV := "production"
 APP_NAME_STAGING := vistisen-staging
 APP_NAME_PRODUCTION := vistisen-production
