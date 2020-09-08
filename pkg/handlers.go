@@ -1,8 +1,10 @@
 package app
 
 import (
+	"bytes"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/gomail.v2"
+	"html/template"
 	"net/http"
 )
 
@@ -35,23 +37,36 @@ func (s *Server) Contact() gin.HandlerFunc {
 		err := c.ShouldBindJSON(&cM)
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"status": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"status": "bad request from client", "res_code": 400})
 			return
 		}
 
+		mailTemplate, err := template.ParseFiles("./contact_mail.html")
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"status": "server side error", "res_code": 500})
+		}
+
+		var t bytes.Buffer
+		err = mailTemplate.Execute(&t, cM)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"status": "server side error", "res_code": 500})
+		}
+
 		mail := gomail.NewMessage()
-		mail.SetAddressHeader("From", cM.Mail, cM.Name)
-		mail.SetHeader("To", "vistisen@live.dk")
+		mail.SetAddressHeader("From", "noreply@mbvistisen.dk", cM.Name+" wants to contact you")
+		mail.SetHeader("To", "morten@mbvistisen.dk")
 		mail.SetHeader("Subject", cM.Subject)
-		mail.SetBody("text/html", cM.Msg)
+		mail.SetBody("text/html", t.String())
 
 		err = s.Mailer.DialAndSend(mail)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"status": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"status": "server side error", "res_code": 500})
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"status": "success"})
+		c.JSON(http.StatusOK, gin.H{"status": "success", "res_code": 200})
 	}
 }
