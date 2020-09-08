@@ -48,7 +48,7 @@ func (s *Server) Contact() gin.HandlerFunc {
 		err = s.Mailer.DialAndSend(mail)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"status": err})
+			c.JSON(http.StatusInternalServerError, gin.H{"status": err.Error()})
 			return
 		}
 
