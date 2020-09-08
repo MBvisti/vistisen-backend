@@ -25,6 +25,7 @@ RUN GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=${VERSION} -s -w"
 
 FROM alpine
 COPY --from=build-env /app/main /
+COPY --from=build-env /app/pkg/contact_mail.html /
 
 ADD build ./build
 
