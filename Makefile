@@ -32,7 +32,7 @@ format:
 # Work around for connecting to DB on host when running the app in docker
 dev: vet format
 	@docker build --build-arg VERSION=${VERSION} -t ${REGISTRY}/${OUT}:${VERSION} .
-	@docker run --rm -p 5000:5000 ${REGISTRY}/${OUT}:${VERSION}
+	@docker run --rm -e MAIL_PORT=0000 -p 5000:5000 ${REGISTRY}/${OUT}:${VERSION}
 
 test: vet $(BUILD_DIRS)
 	@docker run                                                 	\
