@@ -2,10 +2,11 @@ package app
 
 import (
 	"bytes"
-	"github.com/gin-gonic/gin"
-	"gopkg.in/gomail.v2"
 	"html/template"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"gopkg.in/gomail.v2"
 )
 
 func (s *Server) ApiStatus() gin.HandlerFunc {
@@ -55,8 +56,8 @@ func (s *Server) Contact() gin.HandlerFunc {
 		}
 
 		mail := gomail.NewMessage()
-		mail.SetAddressHeader("From", "noreply@mbvistisen.dk", cM.Name+" wants to contact you")
-		mail.SetHeader("To", "morten@mbvistisen.dk")
+		mail.SetAddressHeader("From", cM.Mail, cM.Name+" wants to contact you")
+		mail.SetHeader("To", "heymbv@gmail.com")
 		mail.SetHeader("Subject", cM.Subject)
 		mail.SetBody("text/html", t.String())
 
