@@ -5,9 +5,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/gomail.v2"
-	"log"
 	"os"
-	"strconv"
 	"vistisen-backend/pkg"
 )
 
@@ -23,12 +21,8 @@ func run() error {
 	port := os.Getenv("PORT")
 	sendGridUser := os.Getenv("SEND_GRID_USER")
 	sendGridPassword := os.Getenv("SEND_GRID_API_KEY")
-	mailHost := os.Getenv("HOST")
-	mailPort, err := strconv.Atoi(os.Getenv("MAIL_PORT"))
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	mailHost := "smtp.gmail.com"
+	mailPort := 465
 
 	gin.SetMode(gin.ReleaseMode)
 
@@ -44,7 +38,7 @@ func run() error {
 
 	server := app.NewServer(r, m)
 
-	err = server.Run(":" + port)
+	err := server.Run(":" + port)
 
 	if err != nil {
 		return err

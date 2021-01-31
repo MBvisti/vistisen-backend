@@ -3,6 +3,7 @@ package app
 import (
 	"bytes"
 	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -38,13 +39,15 @@ func (s *Server) Contact() gin.HandlerFunc {
 		err := c.ShouldBindJSON(&cM)
 
 		if err != nil {
+			log.Printf("this is the err: %v on line: %v", err, 42)
 			c.JSON(http.StatusBadRequest, gin.H{"status": "bad request from client", "res_code": 400})
 			return
 		}
 
-		mailTemplate, err := template.ParseFiles("./contact_mail.html")
+		mailTemplate, err := template.ParseFiles("./pkg/contact_mail.html")
 
 		if err != nil {
+			log.Printf("this is the err: %v on line: %v", err, 49)
 			c.JSON(http.StatusInternalServerError, gin.H{"status": "server side error", "res_code": 500})
 		}
 
@@ -52,6 +55,7 @@ func (s *Server) Contact() gin.HandlerFunc {
 		err = mailTemplate.Execute(&t, cM)
 
 		if err != nil {
+			log.Printf("this is the err: %v on line: %v", err, 56)
 			c.JSON(http.StatusInternalServerError, gin.H{"status": "server side error", "res_code": 500})
 		}
 
@@ -64,6 +68,7 @@ func (s *Server) Contact() gin.HandlerFunc {
 		err = s.Mailer.DialAndSend(mail)
 
 		if err != nil {
+			log.Printf("this is the err: %v on line: %v", err, 67)
 			c.JSON(http.StatusInternalServerError, gin.H{"status": "server side error", "res_code": 500})
 			return
 		}
