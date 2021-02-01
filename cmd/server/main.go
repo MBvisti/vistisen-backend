@@ -21,7 +21,7 @@ func run() error {
 	port := os.Getenv("PORT")
 	sendGridUser := os.Getenv("SEND_GRID_USER")
 	sendGridPassword := os.Getenv("SEND_GRID_API_KEY")
-	mailHost := "smtp.gmail.com"
+	mailHost := "smtp.sendgrid.com"
 	mailPort := 465
 
 	gin.SetMode(gin.ReleaseMode)
