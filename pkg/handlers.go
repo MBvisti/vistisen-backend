@@ -60,7 +60,7 @@ func (s *Server) Contact() gin.HandlerFunc {
 		}
 
 		mail := gomail.NewMessage()
-		mail.SetAddressHeader("From", cM.Mail, cM.Name+" wants to contact you")
+		mail.SetAddressHeader("From", "contact@mortenvistisen.com", cM.Name+" wants to contact you")
 		mail.SetHeader("To", "heymbv@gmail.com")
 		mail.SetHeader("Subject", cM.Subject)
 		mail.SetBody("text/html", t.String())
